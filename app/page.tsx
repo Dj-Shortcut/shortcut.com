@@ -2,11 +2,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import DisplayLogo from '@/components/DisplayLogo';
 import { BootLog } from '@/components/boot-log';
+import { TerminalConsole } from '@/components/terminal-console';
+import { getHigherDimensionsSets } from '@/lib/higherDimensions';
 import { resolveImageUrl } from '@/lib/resolveImageUrl';
 import { getSiteContent } from '@/lib/siteContent';
 
-export default function Home() {
+export default async function Home() {
   const content = getSiteContent();
+  const sets = await getHigherDimensionsSets();
   const coverImage = resolveImageUrl(content.coverPhoto);
   const instagramUrl = content.links.instagram
     ? content.links.instagram.startsWith('http')
@@ -39,7 +42,7 @@ export default function Home() {
       <section id="mixes" className="panel section">
         <h2>MIXES</h2>
         <ul className="cardList">
-          {content.sets.map((mix, index) => (
+          {sets.map((mix, index) => (
             <li key={`${mix.url || 'set'}-${index}`} className="fileCard">
               <p className="fileName">{mix.title || `SET_${index + 1}`}</p>
               <p className="meta">{mix.platform || 'PLATFORM_UNKNOWN'}</p>
@@ -76,6 +79,8 @@ export default function Home() {
           </ul>
         )}
       </section>
+
+      <TerminalConsole djName={content.djName} bioShort={content.bioShort} />
 
       <section id="contact" className="panel section">
         <h2>CONTACT</h2>
