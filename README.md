@@ -51,3 +51,13 @@ Use Next.js defaults unless there is a project-specific reason to override.
 - [ ] Content missing cases:
   - [ ] Empty gigs array shows placeholder card/message.
   - [ ] Missing contact email shows DM-only copy.
+
+
+## Preflight checklist
+
+```bash
+npm ci
+npm run check:content
+npm run lint
+npm run build
+```
