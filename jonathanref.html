@@ -1,23 +1,22 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DJ Jona-Mystic</title>
-  <meta name="description" content="Terminal-style DJ site" />
+  <title>DJ-Shortcut</title>
+  <meta name="description" content="Music for the mind. Electronic Dance Music and Other things I like." />
   <style>
     :root{
       --bg: #050805;
       --panel: #07120B;
       --txt: #D7FFE6;
       --muted: #7ACF98;
-      --acc: #21FF6A;     /* bright */
-      --acc2:#0FAE4B;     /* dim */
+      --acc: #21FF6A;
+      --acc2:#0FAE4B;
       --border: rgba(33,255,106,0.25);
     }
-
     *{ box-sizing: border-box; }
-    html, body { height: 100%; }
+    html, body { height: 100%; scroll-behavior: smooth; }
     body{
       margin: 0;
       background:
@@ -27,326 +26,107 @@
       color: var(--txt);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
-
-    /* scanlines overlay */
     .scanlines::before{
       content:"";
       position: fixed;
       inset: 0;
       pointer-events: none;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(255,255,255,0.03),
-        rgba(255,255,255,0.03) 1px,
-        rgba(0,0,0,0) 3px,
-        rgba(0,0,0,0) 6px
-      );
+      background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(255,255,255,0.03) 1px, rgba(0,0,0,0) 3px, rgba(0,0,0,0) 6px);
       opacity: .10;
       z-index: 0;
     }
-
-    .wrap{
-      position: relative;
-      z-index: 1;
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 24px 14px 40px;
-    }
-
-    .glow{
-      text-shadow: 0 0 12px rgba(33,255,106,0.35);
-    }
-
-    .panel{
-      background: linear-gradient(180deg, rgba(7,18,11,0.95), rgba(5,8,5,0.85));
-      border: 1px solid var(--border);
-      box-shadow: 0 0 0 1px rgba(15,174,75,0.10) inset, 0 0 24px rgba(33,255,106,0.08);
-      border-radius: 16px;
-    }
-
-    .card{
-      padding: 16px;
-    }
-    @media (min-width: 768px){
-      .card{ padding: 22px; }
-      .wrap{ padding: 36px 18px 60px; }
-    }
-
-    .topbar{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    h1{
-      margin: 16px 0 8px;
-      font-size: 34px;
-      line-height: 1.05;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-    @media (min-width: 768px){
-      h1{ font-size: 54px; }
-    }
-
-    .lead{
-      margin: 0;
-      color: var(--muted);
-      max-width: 60ch;
-      line-height: 1.45;
-    }
-
-    .cursor{
-      color: var(--acc);
-      display: inline-block;
-      transform: translateY(1px);
-      animation: blink 1s steps(2, start) infinite;
-    }
+    .wrap{ position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 24px 14px 40px; }
+    .glow{ text-shadow: 0 0 12px rgba(33,255,106,0.35); }
+    .panel{ background: linear-gradient(180deg, rgba(7,18,11,0.95), rgba(5,8,5,0.85)); border: 1px solid var(--border); box-shadow: 0 0 0 1px rgba(15,174,75,0.10) inset, 0 0 24px rgba(33,255,106,0.08); border-radius: 16px; }
+    .card{ padding: 16px; }
+    @media (min-width: 768px){ .card{ padding: 22px; } .wrap{ padding: 36px 18px 60px; } h1{ font-size: 54px; } }
+    .topbar{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; font-size: 13px; color: var(--muted); }
+    h1{ margin: 16px 0 8px; font-size: 34px; line-height: 1.05; font-weight: 700; letter-spacing: -0.02em; }
+    .lead{ margin: 0; color: var(--muted); max-width: 65ch; line-height: 1.45; }
+    .cursor{ color: var(--acc); display: inline-block; transform: translateY(1px); animation: blink 1s steps(2, start) infinite; }
     @keyframes blink { to { opacity: 0; } }
-
-    .boot{
-      margin-top: 16px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,0.30);
-      border-radius: 12px;
-      padding: 12px;
-    }
-    .boot .label{
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 8px;
-      letter-spacing: 0.06em;
-    }
-    .boot ul{
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 6px;
-      font-size: 14px;
-      color: rgba(215,255,230,0.85);
-    }
-    .boot li span{
-      color: var(--acc2);
-      margin-right: 6px;
-    }
-
-    .cmds{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .cmd{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid rgba(33,255,106,0.30);
-      background: rgba(7,18,11,0.70);
-      padding: 10px 12px;
-      border-radius: 12px;
-      text-decoration: none;
-      color: var(--txt);
-      font-size: 14px;
-      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .cmd:hover{
-      transform: translateY(-1px);
-      border-color: rgba(33,255,106,0.55);
-      box-shadow: 0 0 18px rgba(33,255,106,0.12);
-    }
-    .cmd:active{
-      transform: translateY(0px);
-      box-shadow: 0 0 10px rgba(33,255,106,0.10);
-    }
-    .cmd b{
-      color: var(--acc);
-      font-weight: 700;
-    }
-
-    .chips{
-      margin-top: 16px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .chip{
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,0.20);
-      padding: 6px 10px;
-      border-radius: 10px;
-    }
-
-    .grid{
-      margin-top: 16px;
-      display: grid;
-      gap: 14px;
-    }
-    @media (min-width: 900px){
-      .grid{ gap: 18px; }
-    }
-
-    h2{
-      margin: 0;
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .section-head{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .path{
-      font-size: 11px;
-      color: var(--muted);
-      opacity: 0.9;
-    }
-
-    .section-body{
-      margin-top: 12px;
-      color: rgba(215,255,230,0.90);
-      line-height: 1.5;
-      font-size: 14px;
-    }
-
-    .file{
-      margin-top: 12px;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,0.25);
-      border-radius: 12px;
-      padding: 12px;
-    }
-    .file .filelabel{
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-    .row{
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .row .title{
-      color: var(--acc);
-      font-weight: 700;
-    }
-    .row .meta{
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .muted{
-      color: var(--muted);
-    }
-
-    .list{
-      margin: 12px 0 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 8px;
-    }
-    .list li{
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,0.20);
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 14px;
-    }
-    .badge{
-      color: var(--acc2);
-      margin-right: 8px;
-      font-weight: 700;
-      font-size: 12px;
-    }
-
-    footer{
-      margin-top: 14px;
-      padding: 0 4px;
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    /* smooth anchor jump */
-    html{ scroll-behavior: smooth; }
+    .boot{ margin-top: 16px; border: 1px solid var(--border); background: rgba(0,0,0,0.30); border-radius: 12px; padding: 12px; }
+    .boot .label{ font-size: 11px; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.06em; }
+    .boot ul{ margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14px; color: rgba(215,255,230,0.85); }
+    .boot li span{ color: var(--acc2); margin-right: 6px; }
+    .cmds{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .cmd{ display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(33,255,106,0.30); background: rgba(7,18,11,0.70); padding: 10px 12px; border-radius: 12px; text-decoration: none; color: var(--txt); font-size: 14px; transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease; }
+    .cmd:hover{ transform: translateY(-1px); border-color: rgba(33,255,106,0.55); box-shadow: 0 0 18px rgba(33,255,106,0.12); }
+    .cmd b{ color: var(--acc); font-weight: 700; }
+    .chips{ margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--muted); }
+    .chip{ border: 1px solid var(--border); background: rgba(0,0,0,0.20); padding: 6px 10px; border-radius: 10px; }
+    .grid{ margin-top: 16px; display: grid; gap: 14px; }
+    .section-head{ display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    h2{ margin: 0; font-size: 18px; font-weight: 700; }
+    .path{ font-size: 11px; color: var(--muted); opacity: 0.9; }
+    .section-body{ margin-top: 12px; color: rgba(215,255,230,0.90); line-height: 1.5; font-size: 14px; }
+    .list{ margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+    .list li{ border: 1px solid var(--border); background: rgba(0,0,0,0.20); border-radius: 12px; padding: 10px 12px; font-size: 14px; }
+    .badge{ color: var(--acc2); margin-right: 8px; font-weight: 700; font-size: 12px; }
+    .file{ margin-top: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.25); border-radius: 12px; padding: 12px; }
+    .filelabel{ font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .row{ display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .title{ color: var(--acc); font-weight: 700; }
+    .meta{ color: var(--muted); font-size: 12px; }
+    .muted{ color: var(--muted); }
+    a{ color: var(--txt); }
+    .inline-links{ display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 8px; }
+    footer{ margin-top: 14px; padding: 0 4px; font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
   </style>
 </head>
-
 <body class="scanlines">
   <div class="wrap">
-
-    <!-- HERO / TERMINAL -->
     <section class="panel card" id="top">
       <div class="topbar">
-        <div>DJ_JONA-MYSTIC.exe <span style="color:var(--acc2)">v0.1</span></div>
-        <div>STATUS: <span class="glow" style="color:var(--acc)">LIVE</span> • THEME: 2-TONE GREEN</div>
+        <div>DJ-SHORTCUT.exe <span style="color:var(--acc2)">v1.0</span></div>
+        <div>STATUS: <span class="glow" style="color:var(--acc)">LIVE</span> • VIBE: UNDERGROUND</div>
       </div>
-
-      <h1 class="glow">DJ Jona-Mystic</h1>
-      <p class="lead">
-        Terminal-grade energy. Dark club atmosphere. Minimal, sharp, clean.
-        <span class="cursor">▮</span>
-      </p>
-
+      <h1 class="glow">DJ-Shortcut</h1>
+      <p class="lead">Music for the mind. Electronic Dance Music and Other things I like. <span class="cursor">▮</span></p>
       <div class="boot" aria-label="Boot log">
         <div class="label">BOOT_LOG</div>
         <ul id="bootList"></ul>
       </div>
-
       <div class="cmds" role="navigation" aria-label="Commands">
-        <a class="cmd" href="#mixes"><b>&gt;</b> PLAY_LATEST_MIX</a>
-        <a class="cmd" href="#gigs"><b>&gt;</b> VIEW_GIGS</a>
+        <a class="cmd" href="#sets"><b>&gt;</b> PLAY_SETS</a>
+        <a class="cmd" href="#about"><b>&gt;</b> READ_BIO</a>
         <a class="cmd" href="#contact"><b>&gt;</b> BOOKING_CONTACT</a>
       </div>
-
       <div class="chips" aria-label="Stats">
-        <span class="chip">BPM: 124–132</span>
-        <span class="chip">GENRE: <span class="muted">(placeholder)</span></span>
-        <span class="chip">REGION: BE</span>
+        <span class="chip">BPM: 123–145 bpm • 432hz (just for fun)</span>
+        <span class="chip">GENRES: deep house • melodic techno • indie dance • afro house • minimal tech house</span>
+        <span class="chip">REGION: Belgium</span>
       </div>
     </section>
 
-    <!-- SECTIONS -->
     <div class="grid">
-
-      <section class="panel card" id="mixes">
+      <section class="panel card" id="about">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> MIXES</h2>
-          <div class="path">/usr/mixes</div>
+          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> ABOUT</h2>
+          <div class="path">/usr/profile</div>
         </div>
         <div class="section-body">
-          <p class="muted" style="margin:0">
-            Voeg later SoundCloud/Mixcloud/YouTube links toe. Nu staan er placeholders.
-          </p>
-
-          <div class="file">
-            <div class="filelabel">/mixes/latest.set</div>
-            <div class="row">
-              <div class="title glow">Latest Mix — “MIDNIGHT BUILD”</div>
-              <div class="meta">00:00:00</div>
-            </div>
-            <p style="margin:10px 0 0; color:rgba(215,255,230,0.80)">
-              Placeholder beschrijving: vibe, energie, genre tags.
-            </p>
+          <p style="margin:0">Shortcuts are for losers — the name is a reminder to myself to not take them.</p>
+          <p style="margin:10px 0 0">Shortcuts are for losers — the name is a reminder to myself to not take them. DJ-Shortcut blends deep house, melodic techno, indie dance, afro house and minimal tech house into sonic journeys that focus on feeling and mindspace. Belgium-based and ever-curious.</p>
+          <div class="inline-links" aria-label="Social links">
+            <a href="https://soundcloud.com/shortcutsareforlosers" target="_blank" rel="noopener noreferrer">SoundCloud</a>
+            <a href="https://www.facebook.com/shortcutsareforlosers" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a href="https://www.youtube.com/@shortcutDJ" target="_blank" rel="noopener noreferrer">YouTube</a>
           </div>
+        </div>
+      </section>
+
+      <section class="panel card" id="sets">
+        <div class="section-head">
+          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> SETS</h2>
+          <div class="path">/usr/sets</div>
+        </div>
+        <div class="section-body">
+          <ul class="list">
+            <li><span class="badge">[YOUTUBE]</span><a href="https://www.youtube.com/watch?v=i1fTe_pjNnM" target="_blank" rel="noopener noreferrer">Higher Dimensions 1</a></li>
+            <li><span class="badge">[YOUTUBE]</span><a href="https://www.youtube.com/watch?v=eL_GT27eTlc" target="_blank" rel="noopener noreferrer">Higher Dimensions 2</a></li>
+            <li><span class="badge">[YOUTUBE]</span><a href="https://www.youtube.com/watch?v=8xUS9LuWnCk" target="_blank" rel="noopener noreferrer">Higher Dimensions 3</a></li>
+          </ul>
         </div>
       </section>
 
@@ -356,14 +136,8 @@
           <div class="path">/usr/gigs</div>
         </div>
         <div class="section-body">
-          <p class="muted" style="margin:0">
-            Zodra je data hebt: dit wordt een “task queue” met upcoming + history.
-          </p>
-
           <ul class="list">
-            <li><span class="badge">[PENDING]</span> TBA — Venue — City</li>
-            <li><span class="badge">[PENDING]</span> TBA — Venue — City</li>
-            <li><span class="badge">[PENDING]</span> TBA — Venue — City</li>
+            <li><span class="badge">[EMPTY]</span>No gigs announced yet.</li>
           </ul>
         </div>
       </section>
@@ -374,52 +148,57 @@
           <div class="path">/usr/contact</div>
         </div>
         <div class="section-body">
-          <p class="muted" style="margin:0">
-            Nog geen contactgegevens? Dit staat nu als “disabled prompt”.
-          </p>
-
           <div class="file">
             <div class="filelabel">/contact/booking</div>
-            <p style="margin:0; color:rgba(215,255,230,0.85)">
-              <span style="color:var(--acc2); font-weight:700">ERR:</span> CONTACT_NOT_CONFIGURED
-            </p>
-            <p style="margin:10px 0 0" class="muted">
-              Voeg later toe: booking email, Instagram, management (optioneel).
-            </p>
+            <div class="row">
+              <div class="title">Booking: contact via Instagram</div>
+              <div class="meta">email: not configured</div>
+            </div>
+            <p style="margin:10px 0 0" class="muted">Instagram: DM via Instagram is fine.</p>
           </div>
         </div>
       </section>
 
-      <footer>
-        <span>© <span id="year"></span> DJ Jona-Mystic</span>
-        <span style="color:var(--acc2)">BUILD: terminal-skin / minimal</span>
-      </footer>
+      <section class="panel card" id="easter-eggs">
+        <div class="section-head">
+          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> EASTER EGGS</h2>
+          <div class="path">/usr/easter-eggs</div>
+        </div>
+        <div class="section-body">
+          <ul class="list">
+            <li><span class="badge">[CMD]</span><code>sudo vibe</code></li>
+            <li><span class="badge">[CMD]</span><code>alias higherdims='play sets'</code></li>
+          </ul>
+        </div>
+      </section>
 
+      <footer>
+        <span>© <span id="year"></span> DJ-Shortcut</span>
+        <span style="color:var(--acc2)">BUILD: terminal-skin / underground</span>
+      </footer>
     </div>
   </div>
 
   <script>
-    // boot log typing (small, fast, phone-friendly)
     const bootLines = [
-      "[SYS] INITIALIZING AUDIO GRAPH...",
-      "[OK]  LOADING VISUAL MODULES...",
-      "[OK]  SYNCING BPM CLOCK...",
-      "[OK]  ROUTING OUTPUT -> MAIN",
+      "[SYS] INITIALIZING DJ-SHORTCUT PROFILE...",
+      "[OK]  LOADING GENRES -> deep house, melodic techno, indie dance...",
+      "[OK]  SYNCING RANGE -> 123–145 bpm",
+      "[OK]  ROUTING OUTPUT -> MINDSPACE",
       "[OK]  READY"
     ];
-
     const bootList = document.getElementById("bootList");
     const year = document.getElementById("year");
     year.textContent = new Date().getFullYear();
 
     let i = 0;
-    function addLine(){
-      if(i >= bootLines.length) return;
+    function addLine() {
+      if (i >= bootLines.length) return;
       const li = document.createElement("li");
       li.innerHTML = "<span>›</span>" + bootLines[i];
       bootList.appendChild(li);
       i++;
-      setTimeout(addLine, 180); // quick
+      setTimeout(addLine, 180);
     }
     addLine();
   </script>
