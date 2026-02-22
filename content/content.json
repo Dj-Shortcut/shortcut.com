@@ -1,23 +1,43 @@
 {
-  "higherDimensionsSets": [
+  "djName": "DJ SHORTCUT",
+  "tagline": "Music for the mind. Deep groove systems and melodic pressure.",
+  "bioShort": "DJ SHORTCUT blends deep house, melodic techno, and indie dance for late-night floors and focused listening.",
+  "genres": ["Deep House", "Melodic Techno", "Indie Dance"],
+  "bpmRange": "123-145 BPM",
+  "region": "NL / EU",
+  "links": {
+    "soundcloud": "https://soundcloud.com/",
+    "facebook": "https://facebook.com/",
+    "youtubeChannel": "https://www.youtube.com/@djshortcut",
+    "instagram": "shortcutsareforlosers"
+  },
+  "coverPhoto": "/cover.jpg",
+  "sets": [
     {
       "title": "Higher Dimensions 1",
+      "platform": "YouTube",
       "url": "https://www.youtube.com/watch?v=i1fTe_pjNnM",
-      "description": "Deep grooves and melodic build-up for the first Higher Dimensions trip.",
-      "duration": "1:01:42",
-      "descriptionOption": "A"
+      "description": "Deep grooves and melodic build-up for the first Higher Dimensions trip."
     },
     {
       "title": "Higher Dimensions 2",
+      "platform": "YouTube",
       "url": "https://www.youtube.com/watch?v=eL_GT27eTlc",
-      "duration": "58:20",
-      "descriptionOption": "B"
+      "description": "Progressive movement with after-hours momentum."
     },
     {
       "title": "Higher Dimensions 3",
-      "url": "https://www.youtube.com/watch?v=8xUS9LuWnCk",
-      "duration": "1:05:10",
-      "descriptionOption": "C"
+      "platform": "YouTube",
+      "url": "https://www.youtube.com/watch?v=8xUS9LuWnCk"
     }
+  ],
+  "gigs": [],
+  "contact": "Bookings: DM on Instagram or reach out through linked channels.",
+  "bootLogLines": [
+    "[SYS] INITIALIZING DJ SHORTCUT PROFILE...",
+    "[OK] LOADING GENRES -> DEEP HOUSE / MELODIC TECHNO / INDIE DANCE",
+    "[OK] SYNCING RANGE -> 123-145 BPM",
+    "[OK] TARGET REGION -> NL / EU",
+    "[OK] TERMINAL READY"
   ]
 }

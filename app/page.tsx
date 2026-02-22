@@ -1,65 +1,76 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import DisplayLogo from '@/components/DisplayLogo';
 import { BootLog } from '@/components/boot-log';
-
-const mixes = [
-  { title: 'Higher Dimensions 1', href: 'https://www.youtube.com/watch?v=i1fTe_pjNnM' },
-  { title: 'Higher Dimensions 2', href: 'https://www.youtube.com/watch?v=eL_GT27eTlc' },
-  { title: 'Higher Dimensions 3', href: 'https://www.youtube.com/watch?v=8xUS9LuWnCk' }
-];
-
-const gigs: { title: string; date: string; venue: string }[] = [];
-
-const contact = {
-  instagram: 'https://www.instagram.com/shortcutsareforlosers/',
-  email: ''
-};
+import { resolveImageUrl } from '@/lib/resolveImageUrl';
+import { getSiteContent } from '@/lib/siteContent';
 
 export default function Home() {
+  const content = getSiteContent();
+  const coverImage = resolveImageUrl(content.coverPhoto);
+  const instagramUrl = content.links.instagram
+    ? content.links.instagram.startsWith('http')
+      ? content.links.instagram
+      : `https://instagram.com/${content.links.instagram.replace(/^@/, '')}`
+    : '';
+
   return (
     <main className="pageWrap">
       <section className="panel hero">
-        <p className="status">DJ-SHORTCUT.exe v2.0 · LIVE</p>
-        <h1>DJ-Shortcut</h1>
-        <p className="lead">Music for the mind. Electronic dance, melodic journeys, and underground grooves.</p>
-        <div className="heroImageWrap">
-          <Image src="/hero-wave.svg" alt="Abstract waveform artwork" fill priority sizes="(max-width: 768px) 100vw, 960px" />
+        <div className="heroImageWrap" aria-hidden>
+          <Image src={coverImage} alt="" fill priority sizes="100vw" />
+          <div className="heroOverlay" />
         </div>
-        <BootLog />
+
+        <p className="status">{content.region} · {content.bpmRange}</p>
+        <DisplayLogo className="displayLogo" />
+        <p className="lead">{content.tagline}</p>
+        <p className="bio">{content.bioShort}</p>
+
+        <BootLog lines={content.bootLogLines} />
+
         <nav className="anchorNav" aria-label="Main sections">
-          <a href="#mixes">Mixes</a>
-          <a href="#gigs">Gigs</a>
-          <a href="#contact">Contact</a>
+          <a href="#mixes">PLAY_LATEST</a>
+          <a href="#gigs">DATES</a>
+          <a href="#contact">BOOKING</a>
         </nav>
       </section>
 
       <section id="mixes" className="panel section">
-        <h2>Mixes</h2>
+        <h2>MIXES</h2>
         <ul className="cardList">
-          {mixes.map((mix) => (
-            <li key={mix.href}>
-              <Link href={mix.href} target="_blank" rel="noopener noreferrer">
-                {mix.title}
-              </Link>
+          {content.sets.map((mix, index) => (
+            <li key={`${mix.url || 'set'}-${index}`} className="fileCard">
+              <p className="fileName">{mix.title || `SET_${index + 1}`}</p>
+              <p className="meta">{mix.platform || 'PLATFORM_UNKNOWN'}</p>
+              <p className="desc">{mix.description || 'Description unavailable. Open link for full details.'}</p>
+              {mix.url ? (
+                <Link href={mix.url} target="_blank" rel="noopener noreferrer">
+                  OPEN_LINK
+                </Link>
+              ) : (
+                <span className="disabledLink">LINK_UNAVAILABLE</span>
+              )}
             </li>
           ))}
         </ul>
       </section>
 
       <section id="gigs" className="panel section">
-        <h2>Gigs</h2>
-        {gigs.length === 0 ? (
+        <h2>GIGS</h2>
+        {content.gigs.length === 0 ? (
           <div className="emptyState">
-            <p>No gigs announced yet.</p>
-            <small>Check back soon for new dates and venues.</small>
+            <p>NO_CONFIRMED_GIGS_YET</p>
+            <small>DM on Instagram for bookings.</small>
           </div>
         ) : (
-          <ul className="cardList">
-            {gigs.map((gig) => (
-              <li key={`${gig.date}-${gig.venue}`}>
-                <strong>{gig.title}</strong>
-                <span>{gig.date}</span>
-                <span>{gig.venue}</span>
+          <ul className="cardList gigList">
+            {content.gigs.map((gig, index) => (
+              <li key={`${gig.date || 'date'}-${index}`}>
+                <strong>{gig.date || 'DATE_TBA'}</strong>
+                <span>{gig.venue || 'VENUE_TBA'}</span>
+                <span>{gig.city || 'CITY_TBA'}</span>
+                {gig.note ? <small>{gig.note}</small> : null}
               </li>
             ))}
           </ul>
@@ -67,20 +78,27 @@ export default function Home() {
       </section>
 
       <section id="contact" className="panel section">
-        <h2>Contact</h2>
-        {contact.email ? (
-          <p>
-            Booking by email: <a href={`mailto:${contact.email}`}>{contact.email}</a>
-          </p>
-        ) : (
-          <div className="emptyState">
-            <p>Email is currently not configured.</p>
-            <small>DM-only for now: please reach out via Instagram.</small>
-          </div>
-        )}
-        <p>
-          Instagram: <Link href={contact.instagram}>@shortcutsareforlosers</Link>
-        </p>
+        <h2>CONTACT</h2>
+        <p>{content.contact}</p>
+        <ul className="cardList">
+          {instagramUrl ? (
+            <li>
+              <Link href={instagramUrl} target="_blank" rel="noopener noreferrer">INSTAGRAM_DM</Link>
+            </li>
+          ) : (
+            <li>Instagram handle unavailable. Use SoundCloud or YouTube contact paths.</li>
+          )}
+          {content.links.soundcloud ? (
+            <li>
+              <Link href={content.links.soundcloud} target="_blank" rel="noopener noreferrer">SOUNDCLOUD</Link>
+            </li>
+          ) : null}
+          {content.links.youtubeChannel ? (
+            <li>
+              <Link href={content.links.youtubeChannel} target="_blank" rel="noopener noreferrer">YOUTUBE</Link>
+            </li>
+          ) : null}
+        </ul>
       </section>
     </main>
   );

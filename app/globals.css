@@ -1,9 +1,10 @@
 :root {
   --bg: #050805;
-  --panel: #07120b;
+  --panel: #08140d;
   --txt: #d7ffe6;
   --muted: #7acf98;
   --acc: #21ff6a;
+  --acc2: #0ba95b;
   --border: rgba(33, 255, 106, 0.25);
 }
 
@@ -15,9 +16,19 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: radial-gradient(1200px 600px at 20% 10%, rgba(33, 255, 106, 0.1), transparent 60%), var(--bg);
+  scroll-behavior: smooth;
+  background: radial-gradient(1200px 600px at 20% 10%, rgba(33, 255, 106, 0.09), transparent 60%), var(--bg);
   color: var(--txt);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 3px);
+  opacity: 0.15;
 }
 
 .pageWrap {
@@ -29,33 +40,57 @@ body {
 }
 
 .panel {
-  background: linear-gradient(180deg, rgba(7, 18, 11, 0.95), rgba(5, 8, 5, 0.85));
+  background: linear-gradient(180deg, rgba(8, 20, 13, 0.95), rgba(5, 8, 5, 0.86));
   border: 1px solid var(--border);
   border-radius: 1rem;
   padding: 1rem;
+  box-shadow: 0 0 18px rgba(11, 169, 91, 0.12);
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
 }
 
 .heroImageWrap {
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(5, 8, 5, 0.48), rgba(5, 8, 5, 0.86));
+}
+
+.hero > * {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1200/630;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  margin: 1rem 0;
+  z-index: 1;
+}
+
+.displayLogo {
+  margin: 0.4rem 0 0.7rem;
+  max-width: 32rem;
 }
 
 .status {
   color: var(--muted);
   font-size: 0.75rem;
+  margin: 0;
 }
 
-h1,
 h2 {
-  margin: 0.5rem 0;
+  margin: 0 0 0.75rem;
 }
 
 .lead {
   margin: 0;
+  color: var(--txt);
+}
+
+.bio {
+  margin: 0.5rem 0 1rem;
   color: var(--muted);
 }
 
@@ -63,7 +98,7 @@ h2 {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.28);
 }
 
 .bootLabel {
@@ -88,12 +123,15 @@ h2 {
 .anchorNav {
   display: flex;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  margin-top: 0.9rem;
   flex-wrap: wrap;
 }
 
-.anchorNav a,
-a {
+.anchorNav a {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  text-decoration: none;
   color: var(--txt);
 }
 
@@ -109,20 +147,42 @@ a {
   gap: 0.6rem;
 }
 
+.fileCard,
 .cardList li,
 .emptyState {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.24);
 }
 
-.emptyState p {
+.fileName {
   margin: 0;
 }
 
-.emptyState small {
+.meta,
+.desc,
+.emptyState small,
+.gigList small {
   color: var(--muted);
+}
+
+.meta,
+.desc {
+  margin: 0.45rem 0;
+}
+
+a {
+  color: var(--acc);
+}
+
+.disabledLink {
+  color: var(--muted);
+}
+
+.gigList li {
+  display: grid;
+  gap: 0.2rem;
 }
 
 @media (min-width: 768px) {
