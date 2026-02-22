@@ -9,7 +9,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = content.tagline || content.bioShort || 'Music for the mind.';
   const image = resolveImageUrl(content.ogImage ?? content.coverPhoto);
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+
   return {
+    metadataBase: new URL(siteUrl),
     title,
     description,
     openGraph: {

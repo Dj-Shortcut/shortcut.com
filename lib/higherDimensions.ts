@@ -27,7 +27,7 @@ type OEmbedResponse = {
   title?: string;
 };
 
-const sets = content.higherDimensionsSets as HigherDimensionsSet[];
+const sets = content.sets as HigherDimensionsSet[];
 
 const isYouTubeApiEnabled =
   process.env.NEXT_PUBLIC_ENABLE_YOUTUBE_DATA_API === "true" &&
