@@ -80,12 +80,13 @@
     footer{ margin-top: 14px; padding: 0 4px; font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
   </style>
 </head>
-<body class="scanlines">
+<body>
+  <div class="scanlines-overlay" aria-hidden="true"></div>
   <div class="wrap">
-    <section class="panel card" id="top">
-      <div class="topbar">
+    <section class="ui-terminal-panel ui-terminal-card" id="top">
+      <div class="ui-terminal-topbar">
         <div>DJ-SHORTCUT.exe <span style="color:var(--acc2)">v1.0</span></div>
-        <div>STATUS: <span class="glow" style="color:var(--acc)">LIVE</span> • VIBE: UNDERGROUND</div>
+        <div>STATUS: <span class="ui-glow" style="color:var(--acc)">LIVE</span> • VIBE: UNDERGROUND</div>
       </div>
       <h1 class="glow">DJ-Shortcut <span class="cursor" aria-hidden="true">▮</span></h1>
       <p class="lead">Music for the mind. Electronic Dance Music and Other things I like. <span class="cursor">▮</span></p>
@@ -108,7 +109,7 @@
     <div class="grid">
       <section class="panel card reveal" id="about">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> ABOUT</h2>
+          <h2 class="ui-glow"><span style="color:var(--acc)">&gt;</span> ABOUT</h2>
           <div class="path">/usr/profile</div>
         </div>
         <div class="section-body">
@@ -124,7 +125,7 @@
 
       <section class="panel card reveal" id="sets">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> SETS</h2>
+          <h2 class="ui-glow"><span style="color:var(--acc)">&gt;</span> SETS</h2>
           <div class="path">/usr/sets</div>
         </div>
         <div class="section-body">
@@ -138,7 +139,7 @@
 
       <section class="panel card reveal" id="gigs">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> GIGS</h2>
+          <h2 class="ui-glow"><span style="color:var(--acc)">&gt;</span> GIGS</h2>
           <div class="path">/usr/gigs</div>
         </div>
         <div class="section-body">
@@ -150,7 +151,7 @@
 
       <section class="panel card reveal" id="contact">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> CONTACT</h2>
+          <h2 class="ui-glow"><span style="color:var(--acc)">&gt;</span> CONTACT</h2>
           <div class="path">/usr/contact</div>
         </div>
         <div class="section-body">
@@ -167,7 +168,7 @@
 
       <section class="panel card reveal" id="easter-eggs">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> EASTER EGGS</h2>
+          <h2 class="ui-glow"><span style="color:var(--acc)">&gt;</span> EASTER EGGS</h2>
           <div class="path">/usr/easter-eggs</div>
         </div>
         <div class="section-body">
