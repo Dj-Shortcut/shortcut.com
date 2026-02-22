@@ -16,12 +16,32 @@ npm run build
 npm run start
 ```
 
-## Vercel deploy notes
+## Vercel first-deploy checklist
 
-- Framework preset: **Next.js**
-- Root route `/` is served by `app/page.tsx`.
-- Build command: `npm run build`
-- Start command: `npm run start`
+Use Next.js defaults unless there is a project-specific reason to override.
+
+1. **Import / project setup**
+   - Add New → Project → Import `Dj-Shortcut/shortcut.com`
+   - Keep `main` as production branch
+2. **Framework preset**
+   - Framework: **Next.js** (auto-detected)
+   - Root directory: `.`
+3. **Build settings**
+   - Install command: `npm install`
+   - Build command: `npm run build`
+   - Output directory: leave default/empty for Next.js
+4. **Node runtime**
+   - Use Vercel default runtime (recommended)
+   - This repo also declares `"engines": { "node": ">=20" }`
+5. **Environment variables**
+   - None required for current feature set
+6. **Domain strategy**
+   - Validate first on `*.vercel.app`
+   - Add `dj-shortcut.com` only after the initial deployment is stable
+7. **Post-deploy smoke test**
+   - `/` loads
+   - `/cover.jpg` loads
+   - browser console is clean
 
 ## QA checklist
 
