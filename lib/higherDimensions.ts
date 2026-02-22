@@ -1,10 +1,10 @@
-import { unstable_cache } from "next/cache";
+import { unstable_cache } from 'next/cache';
 
-import content from "../content/content.json";
+import { getSiteContent } from '@/lib/siteContent';
 
-export const DESCRIPTION_FALLBACK = "Description not loaded — see YouTube";
+export const DESCRIPTION_FALLBACK = 'Description not loaded — see YouTube';
 
-export type DescriptionOption = "A" | "B" | "C";
+export type DescriptionOption = 'A' | 'B' | 'C';
 
 export type HigherDimensionsSet = {
   title: string;
@@ -27,10 +27,8 @@ type OEmbedResponse = {
   title?: string;
 };
 
-const sets = content.sets as HigherDimensionsSet[];
-
 const isYouTubeApiEnabled =
-  process.env.NEXT_PUBLIC_ENABLE_YOUTUBE_DATA_API === "true" &&
+  process.env.NEXT_PUBLIC_ENABLE_YOUTUBE_DATA_API === 'true' &&
   Boolean(process.env.YOUTUBE_API_KEY);
 
 const fetchYouTubeSnippet = unstable_cache(
@@ -40,14 +38,14 @@ const fetchYouTubeSnippet = unstable_cache(
     }
 
     const params = new URLSearchParams({
-      part: "snippet",
+      part: 'snippet',
       id: videoId,
-      key: process.env.YOUTUBE_API_KEY,
+      key: process.env.YOUTUBE_API_KEY
     });
 
     const response = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?${params.toString()}`,
-      { next: { revalidate: 3600 } },
+      { next: { revalidate: 3600 } }
     );
 
     if (!response.ok) {
@@ -57,18 +55,18 @@ const fetchYouTubeSnippet = unstable_cache(
     const payload = (await response.json()) as YouTubeSnippet;
     return payload.items?.[0]?.snippet ?? null;
   },
-  ["youtube-snippet"],
-  { revalidate: 3600 },
+  ['youtube-snippet'],
+  { revalidate: 3600 }
 );
 
 const fetchYouTubeOEmbedTitle = unstable_cache(
   async (setUrl: string) => {
-    const oEmbedUrl = new URL("https://www.youtube.com/oembed");
-    oEmbedUrl.searchParams.set("url", setUrl);
-    oEmbedUrl.searchParams.set("format", "json");
+    const oEmbedUrl = new URL('https://www.youtube.com/oembed');
+    oEmbedUrl.searchParams.set('url', setUrl);
+    oEmbedUrl.searchParams.set('format', 'json');
 
     const response = await fetch(oEmbedUrl.toString(), {
-      next: { revalidate: 3600 },
+      next: { revalidate: 3600 }
     });
 
     if (!response.ok) {
@@ -78,28 +76,32 @@ const fetchYouTubeOEmbedTitle = unstable_cache(
     const payload = (await response.json()) as OEmbedResponse;
     return payload.title ?? null;
   },
-  ["youtube-oembed-title"],
-  { revalidate: 3600 },
+  ['youtube-oembed-title'],
+  { revalidate: 3600 }
 );
 
 const getVideoIdFromUrl = (url: string): string | null => {
-  const parsed = new URL(url);
-  return parsed.searchParams.get("v");
+  try {
+    const parsed = new URL(url);
+    return parsed.searchParams.get('v');
+  } catch {
+    return null;
+  }
 };
 
 export const resolveHigherDimensionsSet = async (
-  set: HigherDimensionsSet,
+  set: HigherDimensionsSet
 ): Promise<HigherDimensionsSet> => {
-  const option = set.descriptionOption ?? "A";
+  const option = set.descriptionOption ?? 'A';
 
-  if (option === "A") {
+  if (option === 'A') {
     return {
       ...set,
-      description: set.description?.trim() ? set.description : DESCRIPTION_FALLBACK,
+      description: set.description?.trim() ? set.description : DESCRIPTION_FALLBACK
     };
   }
 
-  if (option === "B") {
+  if (option === 'B') {
     const videoId = getVideoIdFromUrl(set.url);
 
     if (videoId) {
@@ -108,14 +110,14 @@ export const resolveHigherDimensionsSet = async (
         return {
           ...set,
           title: snippet.title?.trim() || set.title,
-          description: snippet.description,
+          description: snippet.description
         };
       }
     }
 
     return {
       ...set,
-      description: set.description?.trim() ? set.description : DESCRIPTION_FALLBACK,
+      description: set.description?.trim() ? set.description : DESCRIPTION_FALLBACK
     };
   }
 
@@ -123,9 +125,13 @@ export const resolveHigherDimensionsSet = async (
   return {
     ...set,
     title: oEmbedTitle?.trim() || set.title,
-    description: DESCRIPTION_FALLBACK,
+    description: DESCRIPTION_FALLBACK
   };
 };
 
-export const getHigherDimensionsSets = async (): Promise<HigherDimensionsSet[]> =>
-  Promise.all(sets.map((set) => resolveHigherDimensionsSet(set)));
+export const getHigherDimensionsSets = async (): Promise<HigherDimensionsSet[]> => {
+  const content = getSiteContent();
+  const sets = content.sets as HigherDimensionsSet[];
+
+  return Promise.all(sets.map((set) => resolveHigherDimensionsSet(set)));
+};
