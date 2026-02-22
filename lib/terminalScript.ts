@@ -69,6 +69,14 @@ const withBackAction = (actions: ActionChip[], state: TerminalState): ActionChip
   return [{ label: 'Back', actionId: 'back' }, ...actions];
 };
 
+const getGenreByIndex = (content: SiteContent, index: number): string => {
+  if (content.genres.length === 0) {
+    return '';
+  }
+
+  return content.genres[index % content.genres.length]?.toLowerCase() || '';
+};
+
 export const getSceneOutput = (scene: SceneId, state: TerminalState, content: SiteContent): Omit<TransitionResult, 'state'> => {
   const mixes = content.sets;
   const latest = mixes[0];
@@ -145,7 +153,7 @@ export const getSceneOutput = (scene: SceneId, state: TerminalState, content: Si
       };
     }
 
-    const selectedGenre = content.genres[state.selectedMixIndex % content.genres.length]?.toLowerCase() || '';
+    const selectedGenre = state.selectedMixIndex === null ? '' : getGenreByIndex(content, state.selectedMixIndex);
     const nextSuggestion =
       selectedGenre.includes('melodic techno') || selected.title?.toLowerCase().includes('melodic techno')
         ? 'Since you picked melodic techno, try indie dance next.'
@@ -153,9 +161,11 @@ export const getSceneOutput = (scene: SceneId, state: TerminalState, content: Si
           ? 'You might also enjoy indie dance textures in the next set.'
           : 'Want another direction? Try the next mix from the list.';
 
+    const selectedMixNumber = (state.selectedMixIndex ?? 0) + 1;
+
     return {
       lines: [
-        `Selected mix ${state.selectedMixIndex + 1}: ${selected.title || 'Untitled'}`,
+        `Selected mix ${selectedMixNumber}: ${selected.title || 'Untitled'}`,
         selected.description || 'No description available for this mix.',
         selected.url ? `Link ready: ${selected.url}` : 'No URL saved for this mix.',
         nextSuggestion
@@ -259,7 +269,7 @@ export const runAction = (
     const loweredGenreBlob = `${mix?.title || ''} ${mix?.description || ''}`.toLowerCase();
     const userInterest = new Set(state.userInterest);
 
-    if (loweredGenreBlob.includes('melodic techno') || content.genres[mixIndex % content.genres.length]?.toLowerCase().includes('melodic techno')) {
+    if (loweredGenreBlob.includes('melodic techno') || getGenreByIndex(content, mixIndex).includes('melodic techno')) {
       userInterest.add('melodic techno');
     }
 

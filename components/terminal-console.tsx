@@ -25,19 +25,25 @@ export function TerminalConsole({ content }: TerminalConsoleProps) {
   const [actions, setActions] = useState<ActionChip[]>([]);
   const [state, setState] = useState(initialTerminalState);
   const logRef = useRef<HTMLDivElement | null>(null);
+  const timeoutIdsRef = useRef<number[]>([]);
 
   const typeLines = useMemo(
     () => (lines: string[], withThinking = false) => {
       let delay = 0;
+      const schedule = (callback: () => void, timeout: number) => {
+        const id = window.setTimeout(callback, timeout);
+        timeoutIdsRef.current.push(id);
+      };
+
       if (withThinking) {
-        window.setTimeout(() => {
+        schedule(() => {
           setOutput((prev) => [...prev, THINKING_LINE]);
         }, delay);
         delay += 280;
       }
 
       lines.forEach((line) => {
-        window.setTimeout(() => {
+        schedule(() => {
           setOutput((prev) => {
             const trimmed = prev.filter((entry) => entry !== THINKING_LINE);
             return [...trimmed, line];
@@ -48,6 +54,13 @@ export function TerminalConsole({ content }: TerminalConsoleProps) {
     },
     []
   );
+
+  useEffect(() => {
+    return () => {
+      timeoutIdsRef.current.forEach((id) => window.clearTimeout(id));
+      timeoutIdsRef.current = [];
+    };
+  }, []);
 
   useEffect(() => {
     const intro = getSceneOutput('intro', initialTerminalState, content);
