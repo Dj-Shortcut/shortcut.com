@@ -55,7 +55,7 @@ body::before {
 .heroImageWrap {
   position: absolute;
   inset: 0;
-  opacity: 0.28;
+  opacity: 0.2;
 }
 
 .heroOverlay {

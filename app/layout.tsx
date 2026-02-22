@@ -5,22 +5,23 @@ import { getSiteContent } from '@/lib/siteContent';
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = getSiteContent();
-  const img = resolveImageUrl(content.ogImage ?? content.coverPhoto);
-  const description = content.tagline || content.bioShort;
+  const title = content.djName || 'DJ SHORTCUT';
+  const description = content.tagline || content.bioShort || 'Music for the mind.';
+  const image = resolveImageUrl(content.ogImage ?? content.coverPhoto);
 
   return {
-    title: content.djName,
+    title,
     description,
     openGraph: {
-      title: content.djName,
+      title,
       description,
-      images: [{ url: img }]
+      images: [{ url: image }]
     },
     twitter: {
       card: 'summary_large_image',
-      title: content.djName,
+      title,
       description,
-      images: [img]
+      images: [image]
     }
   };
 }
