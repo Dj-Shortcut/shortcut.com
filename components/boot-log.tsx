@@ -2,36 +2,35 @@
 
 import { useEffect, useState } from 'react';
 
-const bootLines = [
-  '[SYS] INITIALIZING DJ-SHORTCUT PROFILE...',
-  '[OK] LOADING GENRES -> deep house, melodic techno, indie dance...',
-  '[OK] SYNCING RANGE -> 123–145 BPM',
-  '[OK] ROUTING OUTPUT -> MINDSPACE',
-  '[OK] READY'
-];
+type BootLogProps = {
+  lines: string[];
+};
 
-export function BootLog() {
-  const [lines, setLines] = useState<string[]>([]);
+export function BootLog({ lines }: BootLogProps) {
+  const [visibleLines, setVisibleLines] = useState<string[]>([]);
 
   useEffect(() => {
+    setVisibleLines([]);
+
     let current = 0;
     const interval = setInterval(() => {
-      setLines((prev) => [...prev, bootLines[current]]);
+      setVisibleLines((prev) => [...prev, lines[current]]);
       current += 1;
-      if (current >= bootLines.length) {
+
+      if (current >= lines.length) {
         clearInterval(interval);
       }
-    }, 150);
+    }, 180);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [lines]);
 
   return (
     <div className="boot">
       <p className="bootLabel">BOOT_LOG</p>
       <ul>
-        {lines.map((line) => (
-          <li key={line}>
+        {visibleLines.map((line, index) => (
+          <li key={`${line}-${index}`}>
             <span>›</span>
             {line}
           </li>
