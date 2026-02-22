@@ -1,0 +1,62 @@
+{
+  "djName": "DJ-Shortcut",
+  "tagline": "Music for the mind. Electronic Dance Music and Other things I like.",
+  "bioShort": "Shortcuts are for losers — the name is a reminder to myself to not take them. DJ-Shortcut blends deep house, melodic techno, indie dance, afro house and minimal tech house into sonic journeys that focus on feeling and mindspace. Belgium-based and ever-curious.",
+  "genres": [
+    "deep house",
+    "melodic techno",
+    "indie dance",
+    "afro house",
+    "minimal tech house"
+  ],
+  "bpmRange": {
+    "min": 123,
+    "max": 145,
+    "note": "432hz (just for fun)"
+  },
+  "region": "Belgium",
+  "links": [
+    {
+      "label": "SoundCloud",
+      "url": "https://soundcloud.com/shortcutsareforlosers",
+      "platform": "soundcloud"
+    },
+    {
+      "label": "Facebook",
+      "url": "https://www.facebook.com/shortcutsareforlosers",
+      "platform": "facebook"
+    },
+    {
+      "label": "YouTube",
+      "url": "https://www.youtube.com/@shortcutDJ",
+      "platform": "youtube"
+    }
+  ],
+  "coverPhoto": {
+    "src": "https://images.unsplash.com/photo-1571266028243-d220c9a96209?auto=format&fit=crop&w=1600&q=80",
+    "alt": "Neon-lit DJ booth in a dark club"
+  },
+  "sets": [
+    {
+      "platform": "YOUTUBE",
+      "title": "Higher Dimensions 1",
+      "url": "https://www.youtube.com/watch?v=i1fTe_pjNnM"
+    },
+    {
+      "platform": "YOUTUBE",
+      "title": "Higher Dimensions 2",
+      "url": "https://www.youtube.com/watch?v=eL_GT27eTlc"
+    },
+    {
+      "platform": "YOUTUBE",
+      "title": "Higher Dimensions 3",
+      "url": "https://www.youtube.com/watch?v=8xUS9LuWnCk"
+    }
+  ],
+  "gigs": [],
+  "contact": {
+    "booking": "contact via Instagram",
+    "email": "not configured",
+    "instagram": "DM via Instagram is fine."
+  }
+}
