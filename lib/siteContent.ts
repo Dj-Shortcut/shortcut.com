@@ -37,6 +37,10 @@ export type SiteContent = {
   bootLogLines: string[];
 };
 
+type RawSiteContent = Partial<SiteContent> & {
+  higherDimensionsSets?: ContentSet[];
+};
+
 const fallbackContent: SiteContent = {
   djName: 'DJ PROFILE',
   tagline: 'Terminal mode engaged.',
@@ -54,7 +58,12 @@ const fallbackContent: SiteContent = {
 
 export function getSiteContent(): SiteContent {
   try {
-    const content = rawContent as Partial<SiteContent>;
+    const content = rawContent as RawSiteContent;
+    const mappedSets = Array.isArray(content.sets)
+      ? content.sets
+      : Array.isArray(content.higherDimensionsSets)
+        ? content.higherDimensionsSets
+        : fallbackContent.sets;
 
     return {
       djName: content.djName || fallbackContent.djName,
@@ -66,7 +75,7 @@ export function getSiteContent(): SiteContent {
       links: content.links || fallbackContent.links,
       coverPhoto: content.coverPhoto || fallbackContent.coverPhoto,
       ogImage: content.ogImage || content.coverPhoto || fallbackContent.coverPhoto,
-      sets: Array.isArray(content.sets) ? content.sets : fallbackContent.sets,
+      sets: mappedSets,
       gigs: Array.isArray(content.gigs) ? content.gigs : fallbackContent.gigs,
       contact: content.contact || fallbackContent.contact,
       bootLogLines:

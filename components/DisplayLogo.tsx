@@ -1,44 +1,42 @@
-import React from "react";
+import React from 'react';
 
 type DisplayLogoProps = {
   className?: string;
 };
 
 const PIXEL = 8;
-const GAP = 1;
+const WORD_GAP = 1;
 
 const rows = {
-  DJ: [
-    "11110 101",
-    "00010 101",
-    "11110 101",
-    "10000 101",
-    "11110 011",
-  ],
+  DJ: ['11110 101', '00010 101', '11110 101', '10000 101', '11110 011'],
   SHORTCUT: [
-    "11111 10001 01110 11111 11111 11111 10001 11111",
-    "10000 10001 10000 00100 00100 00100 10001 00100",
-    "11110 11111 10000 00100 00100 00100 10001 00100",
-    "00001 10001 10000 00100 00100 00100 10001 00100",
-    "11110 10001 01110 00100 00100 11111 01110 00100",
-  ],
+    '11111 10001 01110 11111 11111 11111 10001 11111',
+    '10000 10001 10000 00100 00100 00100 10001 00100',
+    '11110 11111 10000 00100 00100 00100 10001 00100',
+    '00001 10001 10000 00100 00100 00100 10001 00100',
+    '11110 10001 01110 00100 00100 11111 01110 00100'
+  ]
 };
 
-function makeRects(pattern: string[], yOffset: number, blockWidth = PIXEL) {
+function makeRects(pattern: string[], yOffset: number) {
   const rects: Array<{ x: number; y: number; w: number; h: number }> = [];
 
   pattern.forEach((row, y) => {
-    row.split(" ").forEach((word, wordIndex) => {
+    let xCursor = 0;
+
+    row.split(' ').forEach((word) => {
       [...word].forEach((cell, x) => {
-        if (cell === "1") {
+        if (cell === '1') {
           rects.push({
-            x: (x + wordIndex * (word.length + GAP)) * blockWidth,
+            x: (xCursor + x) * PIXEL,
             y: (y + yOffset) * PIXEL,
-            w: blockWidth,
-            h: PIXEL,
+            w: PIXEL,
+            h: PIXEL
           });
         }
       });
+
+      xCursor += word.length + WORD_GAP;
     });
   });
 
@@ -46,9 +44,7 @@ function makeRects(pattern: string[], yOffset: number, blockWidth = PIXEL) {
 }
 
 export default function DisplayLogo({ className }: DisplayLogoProps) {
-  const top = makeRects(rows.DJ, 0);
-  const bottom = makeRects(rows.SHORTCUT, 7);
-  const mainRects = [...top, ...bottom];
+  const mainRects = [...makeRects(rows.DJ, 0), ...makeRects(rows.SHORTCUT, 7)];
 
   return (
     <svg
@@ -67,6 +63,10 @@ export default function DisplayLogo({ className }: DisplayLogoProps) {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+        <pattern id="scan" patternUnits="userSpaceOnUse" width="4" height="4">
+          <rect width="4" height="1" fill="#ffffff" />
+          <rect y="1" width="4" height="3" fill="transparent" />
+        </pattern>
       </defs>
 
       <rect x="0" y="0" width="520" height="120" fill="#000" />
@@ -81,7 +81,6 @@ export default function DisplayLogo({ className }: DisplayLogoProps) {
           <rect key={`o2-${i}`} x={r.x} y={r.y} width={r.w} height={r.h} fill="#0a8f4f" />
         ))}
       </g>
-
       <g className="logo-layer logo-layer--main" filter="url(#glow)">
         {mainRects.map((r, i) => (
           <rect key={`m-${i}`} x={r.x} y={r.y} width={r.w} height={r.h} fill="#00ff88" />
@@ -118,13 +117,6 @@ export default function DisplayLogo({ className }: DisplayLogoProps) {
           61% { opacity: 0.96; }
         }
       `}</style>
-
-      <defs>
-        <pattern id="scan" patternUnits="userSpaceOnUse" width="4" height="4">
-          <rect width="4" height="1" fill="#ffffff" />
-          <rect y="1" width="4" height="3" fill="transparent" />
-        </pattern>
-      </defs>
     </svg>
   );
 }
