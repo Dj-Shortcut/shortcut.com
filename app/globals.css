@@ -4,7 +4,6 @@
   --txt: #d7ffe6;
   --muted: #7acf98;
   --acc: #21ff6a;
-  --acc2: #0ba95b;
   --border: rgba(33, 255, 106, 0.25);
 }
 
@@ -16,8 +15,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  scroll-behavior: smooth;
-  background: radial-gradient(1200px 600px at 20% 10%, rgba(33, 255, 106, 0.09), transparent 60%), var(--bg);
+  background: radial-gradient(1200px 600px at 20% 10%, rgba(33, 255, 106, 0.06), transparent 60%), var(--bg);
   color: var(--txt);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
@@ -27,187 +25,83 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 3px);
-  opacity: 0.15;
+  background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 4px);
+  opacity: 0.06;
 }
 
 .pageWrap {
-  width: min(100%, 960px);
+  width: min(100%, 760px);
+  min-height: 100dvh;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 0.8rem;
   display: grid;
-  gap: 1rem;
 }
 
-.panel {
-  background: linear-gradient(180deg, rgba(8, 20, 13, 0.95), rgba(5, 8, 5, 0.86));
+.terminalPanel {
   border: 1px solid var(--border);
-  border-radius: 1rem;
-  padding: 1rem;
-  box-shadow: 0 0 18px rgba(11, 169, 91, 0.12);
-}
-
-.hero {
-  position: relative;
-  overflow: hidden;
-}
-
-.heroImageWrap {
-  position: absolute;
-  inset: 0;
-  opacity: 0.2;
-}
-
-.heroOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(5, 8, 5, 0.48), rgba(5, 8, 5, 0.86));
-}
-
-.hero > * {
-  position: relative;
-  z-index: 1;
-}
-
-.displayLogo {
-  margin: 0.4rem 0 0.7rem;
-  max-width: 32rem;
-}
-
-.status {
-  color: var(--muted);
-  font-size: 0.75rem;
-  margin: 0;
-}
-
-h2 {
-  margin: 0 0 0.75rem;
-}
-
-.lead {
-  margin: 0;
-  color: var(--txt);
-}
-
-.bio {
-  margin: 0.5rem 0 1rem;
-  color: var(--muted);
-}
-
-.boot {
-  border: 1px solid var(--border);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.28);
-}
-
-.bootLabel {
-  margin: 0 0 0.5rem;
-  font-size: 0.75rem;
-  color: var(--muted);
-}
-
-.boot ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  border-radius: 0.9rem;
+  background: linear-gradient(180deg, rgba(8, 20, 13, 0.97), rgba(5, 8, 5, 0.95));
+  padding: 0.8rem;
   display: grid;
-  gap: 0.25rem;
+  gap: 0.65rem;
+  grid-template-rows: auto 1fr auto auto;
+  min-height: calc(100dvh - 1.6rem);
 }
 
-.boot li span {
-  color: var(--acc);
-  margin-right: 0.4rem;
-}
-
-.anchorNav {
+.terminalHeader {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 0.5rem;
-  margin-top: 0.9rem;
-  flex-wrap: wrap;
 }
 
-.anchorNav a {
+.terminalHeader p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.terminalHeader button,
+.consoleInputRow button,
+.chipRow button {
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  padding: 0.4rem 0.6rem;
-  text-decoration: none;
+  background: rgba(11, 169, 91, 0.16);
   color: var(--txt);
+  border-radius: 0.55rem;
+  padding: 0.4rem 0.6rem;
 }
 
-.section {
-  scroll-margin-top: 1rem;
-}
-
-.cardList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0.6rem;
-}
-
-.fileCard,
-.cardList li,
-.emptyState {
+.terminalOutput {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
-  padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.24);
+  background: rgba(0, 0, 0, 0.22);
+  padding: 0.6rem;
+  overflow-y: auto;
+  min-height: 50dvh;
 }
 
-.fileName {
-  margin: 0;
-}
-
-.meta,
-.desc,
-.emptyState small,
-.gigList small {
+.terminalOutput p {
+  margin: 0 0 0.45rem;
   color: var(--muted);
+  line-height: 1.35;
+  font-size: 0.92rem;
 }
 
-.meta,
-.desc {
-  margin: 0.45rem 0;
+.chipRow {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.1rem;
 }
 
-a {
-  color: var(--acc);
-}
-
-.disabledLink {
-  color: var(--muted);
-}
-
-.gigList li {
-  display: grid;
-  gap: 0.2rem;
-}
-
-@media (min-width: 768px) {
-  .pageWrap {
-    padding: 2rem 1rem 3rem;
-    gap: 1.25rem;
-  }
-
-  .panel {
-    padding: 1.5rem;
-  }
-}
-
-.consoleWrap {
-  border: 1px solid var(--border);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
-  background: rgba(0, 0, 0, 0.24);
-}
-
-.consoleLabel {
-  display: block;
-  color: var(--muted);
-  font-size: 0.75rem;
-  margin-bottom: 0.4rem;
+.chipRow button {
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .consoleInputRow {
@@ -218,34 +112,24 @@ a {
 .consoleInputRow input {
   flex: 1;
   min-width: 0;
-  background: rgba(5, 8, 5, 0.75);
-  color: var(--txt);
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: 0.55rem;
+  background: rgba(5, 8, 5, 0.78);
+  color: var(--txt);
   padding: 0.45rem 0.6rem;
 }
 
-.consoleInputRow button {
-  border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  background: rgba(11, 169, 91, 0.2);
-  color: var(--txt);
-  padding: 0.45rem 0.7rem;
-}
+@media (min-width: 768px) {
+  .pageWrap {
+    padding: 1rem;
+  }
 
-.consoleOutput {
-  list-style: none;
-  margin: 0.65rem 0 0;
-  padding: 0;
-  display: grid;
-  gap: 0.2rem;
-}
+  .terminalPanel {
+    min-height: calc(100dvh - 2rem);
+    padding: 1rem;
+  }
 
-.consoleOutput li {
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-code {
-  color: var(--acc);
+  .terminalOutput {
+    min-height: 58dvh;
+  }
 }

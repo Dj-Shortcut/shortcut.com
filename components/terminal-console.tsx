@@ -1,52 +1,136 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import type { SiteContent } from '@/lib/siteContent';
+import {
+  commandToAction,
+  getSceneOutput,
+  initialTerminalState,
+  runAction,
+  type ActionChip,
+  type TransitionResult
+} from '@/lib/terminalScript';
 
 type TerminalConsoleProps = {
-  djName: string;
-  bioShort: string;
+  content: SiteContent;
 };
 
-const HELP_LINES = [
-  'Available commands: help, about, bpm432, claude, shortcuts.',
-  'Use PLAY_LATEST / DATES / BOOKING to jump through the page.'
-];
+const THINKING_LINE = '...thinking';
 
-export function TerminalConsole({ djName, bioShort }: TerminalConsoleProps) {
+export function TerminalConsole({ content }: TerminalConsoleProps) {
   const [command, setCommand] = useState('');
+  const [showInput, setShowInput] = useState(false);
   const [output, setOutput] = useState<string[]>([]);
+  const [actions, setActions] = useState<ActionChip[]>([]);
+  const [state, setState] = useState(initialTerminalState);
+  const logRef = useRef<HTMLDivElement | null>(null);
 
-  const handlers = useMemo(
-    () => ({
-      help: () => HELP_LINES,
-      about: () => [`${djName}: ${bioShort}`],
-      bpm432: () => ['[EASTER_EGG] Quantum warmup accepted. Tempo remains dancefloor-safe.'],
-      claude: () => ['Nice try. This terminal only boots DJ SHORTCUT protocols.'],
-      shortcuts: () => ['Shortcut found: stay curious, keep it groovy, press play.']
-    }),
-    [bioShort, djName]
+  const typeLines = useMemo(
+    () => (lines: string[], withThinking = false) => {
+      let delay = 0;
+      if (withThinking) {
+        window.setTimeout(() => {
+          setOutput((prev) => [...prev, THINKING_LINE]);
+        }, delay);
+        delay += 280;
+      }
+
+      lines.forEach((line) => {
+        window.setTimeout(() => {
+          setOutput((prev) => {
+            const trimmed = prev.filter((entry) => entry !== THINKING_LINE);
+            return [...trimmed, line];
+          });
+        }, delay);
+        delay += 160;
+      });
+    },
+    []
   );
 
-  const runCommand = (raw: string) => {
-    const normalized = raw.trim().toLowerCase();
+  useEffect(() => {
+    const intro = getSceneOutput('intro', initialTerminalState, content);
+    setActions(intro.actions);
+    typeLines(intro.lines, intro.showThinking);
+  }, [content, typeLines]);
 
-    if (!normalized) {
+  useEffect(() => {
+    if (logRef.current) {
+      logRef.current.scrollTop = logRef.current.scrollHeight;
+    }
+  }, [output]);
+
+  const applyTransition = (transition: TransitionResult) => {
+    if (transition.clearOutput) {
+      setOutput([]);
+    }
+
+    setActions(transition.actions);
+    setState(transition.state);
+    typeLines(transition.lines, transition.showThinking);
+
+    if (transition.openUrl) {
+      window.open(transition.openUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    if (transition.copyValue && navigator.clipboard) {
+      navigator.clipboard.writeText(transition.copyValue).catch(() => {
+        setOutput((prev) => [...prev, 'Clipboard unavailable in this browser context.']);
+      });
+    }
+  };
+
+  const runChipAction = (action: ActionChip) => {
+    applyTransition(runAction(action, state, content));
+  };
+
+  const runCommand = () => {
+    const userCommand = command.trim();
+    if (!userCommand) {
       return;
     }
 
-    const next = handlers[normalized as keyof typeof handlers]
-      ? handlers[normalized as keyof typeof handlers]()
-      : [`Unknown command: ${normalized}. Try: help`];
+    setOutput((prev) => [...prev, `> ${userCommand}`]);
 
-    setOutput((prev) => [...prev.slice(-4), `> ${normalized}`, ...next]);
+    const action = commandToAction(userCommand);
+    if (!action) {
+      setOutput((prev) => [...prev, 'Unknown command. Type "help" for options.']);
+      setCommand('');
+      return;
+    }
+
+    applyTransition(runAction(action, state, content));
     setCommand('');
   };
 
   return (
-    <section className="panel section" aria-label="Terminal easter eggs">
-      <h2>CONSOLE</h2>
-      <div className="consoleWrap">
-        <label htmlFor="terminal-command" className="consoleLabel">RUN_COMMAND</label>
+    <section className="terminalPanel" aria-label="Scripted interactive terminal">
+      <header className="terminalHeader">
+        <p>{content.djName}_TERMINAL</p>
+        <button type="button" onClick={() => setShowInput((prev) => !prev)}>
+          {showInput ? 'Hide Input' : 'Type Command'}
+        </button>
+      </header>
+
+      <div className="terminalOutput" ref={logRef}>
+        {output.map((line, index) => (
+          <p key={`${line}-${index}`}>{line}</p>
+        ))}
+      </div>
+
+      <div className="chipRow" aria-label="Action chips">
+        {actions.map((action, index) => (
+          <button key={`${action.label}-${index}`} type="button" onClick={() => runChipAction(action)}>
+            {action.label}
+          </button>
+        ))}
+        <button type="button" onClick={() => runChipAction({ label: 'Clear', actionId: 'clear' })}>
+          Clear
+        </button>
+      </div>
+
+      {showInput ? (
         <div className="consoleInputRow">
           <input
             id="terminal-command"
@@ -54,25 +138,16 @@ export function TerminalConsole({ djName, bioShort }: TerminalConsoleProps) {
             onChange={(event) => setCommand(event.target.value)}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
-                runCommand(command);
+                runCommand();
               }
             }}
-            placeholder="Type: help"
+            placeholder='Type command: help, mixes, mix 1, open...'
           />
-          <button type="button" onClick={() => runCommand(command)}>
-            EXEC
+          <button type="button" onClick={runCommand}>
+            Run
           </button>
         </div>
-        {output.length > 0 ? (
-          <ul className="consoleOutput">
-            {output.map((line, index) => (
-              <li key={`${line}-${index}`}>{line}</li>
-            ))}
-          </ul>
-        ) : (
-          <p className="muted">Hint: try <code>help</code>, <code>about</code>, or <code>bpm432</code>.</p>
-        )}
-      </div>
+      ) : null}
     </section>
   );
 }
