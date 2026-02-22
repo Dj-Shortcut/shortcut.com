@@ -1,51 +1,22 @@
-# shortcut.com Next.js App Router (TypeScript)
+# Shortcut Next.js App
 
-This repository is initialized as a Next.js App Router project using TypeScript and Vercel-compatible defaults.
+This repository now includes a minimal Next.js setup with standard lifecycle scripts.
 
-`jonathanref.html` in the repository root is the visual reference for future UI implementation work.
+## Scripts
 
-## Local development
+- `npm run dev` starts the development server on `http://localhost:3000`.
+- `npm run build` creates a production build.
+- `npm run start` serves the production build after a successful build.
+- `npm run lint` runs ESLint checks (configured via `.eslintrc.json`).
 
-1. Install dependencies:
+## Expected success checks
 
-   ```bash
-   npm install
-   ```
+Run the following in a standard Node.js environment (Node 18.17+ recommended by Next.js 14):
 
-2. Start the development server:
+1. `npm install`
+2. `npm run lint`
+3. `npm run build`
+4. `npm run dev` (confirm server starts)
+5. `npm run start` (after build, confirm production server starts)
 
-   ```bash
-   npm run dev
-   ```
-
-3. Open [http://localhost:3000](http://localhost:3000).
-
-## Production build
-
-Create an optimized production build:
-
-```bash
-npm run build
-```
-
-Optionally run the production server locally:
-
-```bash
-npm run start
-```
-
-## Deploying to Vercel
-
-This project is ready for Vercel deployment.
-
-- Push the repository to GitHub/GitLab/Bitbucket.
-- Import the repository in Vercel.
-- Keep the default framework preset (**Next.js**) and build settings.
-- Vercel will automatically run `npm install` and `npm run build` during deployment.
-
-For CLI deployment, you can also use:
-
-```bash
-npx vercel
-```
-
+If all commands complete successfully (or servers start without runtime errors), the project is healthy for local development and production startup.
