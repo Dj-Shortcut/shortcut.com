@@ -1,5 +1,5 @@
 {
-  "name": "shortcut-next-app",
+  "name": "dj-shortcut-site",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "14.2.5",
+    "next": "14.2.32",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "eslint": "8.57.0",
-    "eslint-config-next": "14.2.5"
+    "typescript": "5.6.3",
+    "@types/node": "22.10.2",
+    "@types/react": "18.3.14",
+    "@types/react-dom": "18.3.5"
   }
 }

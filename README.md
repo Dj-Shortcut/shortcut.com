@@ -1,22 +1,33 @@
-# Shortcut Next.js App
+# DJ-Shortcut Next.js site
 
-This repository now includes a minimal Next.js setup with standard lifecycle scripts.
+This project is a deploy-ready Next.js App Router website with mobile-first sections for `#mixes`, `#gigs`, and `#contact`.
 
-## Scripts
+## Local development
 
-- `npm run dev` starts the development server on `http://localhost:3000`.
-- `npm run build` creates a production build.
-- `npm run start` serves the production build after a successful build.
-- `npm run lint` runs ESLint checks (configured via `.eslintrc.json`).
+```bash
+npm install
+npm run dev
+```
 
-## Expected success checks
+## Production run
 
-Run the following in a standard Node.js environment (Node 18.17+ recommended by Next.js 14):
+```bash
+npm run build
+npm run start
+```
 
-1. `npm install`
-2. `npm run lint`
-3. `npm run build`
-4. `npm run dev` (confirm server starts)
-5. `npm run start` (after build, confirm production server starts)
+## Vercel deploy notes
 
-If all commands complete successfully (or servers start without runtime errors), the project is healthy for local development and production startup.
+- Framework preset: **Next.js**
+- Root route `/` is served by `app/page.tsx`.
+- Build command: `npm run build`
+- Start command: `npm run start`
+
+## QA checklist
+
+- [ ] Mobile viewport sanity check (e.g. 390×844): hero, navigation anchors, and cards remain readable without horizontal scrolling.
+- [ ] Lighthouse basic check on `/` (Performance, Accessibility, Best Practices, SEO) to verify no major regressions.
+- [ ] Vercel-compatible build passes (`npm run build`) and root route (`/`) renders correctly in production (`npm run start`).
+- [ ] Content missing cases:
+  - [ ] Empty gigs array shows placeholder card/message.
+  - [ ] Missing contact email shows DM-only copy.
