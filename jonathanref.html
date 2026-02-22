@@ -43,7 +43,7 @@
     .topbar{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; font-size: 13px; color: var(--muted); }
     h1{ margin: 16px 0 8px; font-size: 34px; line-height: 1.05; font-weight: 700; letter-spacing: -0.02em; }
     .lead{ margin: 0; color: var(--muted); max-width: 65ch; line-height: 1.45; }
-    .cursor{ color: var(--acc); display: inline-block; transform: translateY(1px); animation: blink 1s steps(2, start) infinite; }
+    .cursor{ color: var(--acc); display: inline-block; transform: translateY(1px); animation: blink 1.1s steps(2, start) infinite; opacity: .85; }
     @keyframes blink { to { opacity: 0; } }
     .boot{ margin-top: 16px; border: 1px solid var(--border); background: rgba(0,0,0,0.30); border-radius: 12px; padding: 12px; }
     .boot .label{ font-size: 11px; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.06em; }
@@ -56,6 +56,12 @@
     .chips{ margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--muted); }
     .chip{ border: 1px solid var(--border); background: rgba(0,0,0,0.20); padding: 6px 10px; border-radius: 10px; }
     .grid{ margin-top: 16px; display: grid; gap: 14px; }
+    .reveal{ opacity: 0; transform: translateY(6px); transition: opacity .35s ease, transform .35s ease; }
+    .reveal.visible{ opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce){
+      .reveal, .reveal.visible{ opacity: 1; transform: none; transition: none; }
+      .cursor{ animation: none; opacity: 1; }
+    }
     .section-head{ display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
     h2{ margin: 0; font-size: 18px; font-weight: 700; }
     .path{ font-size: 11px; color: var(--muted); opacity: 0.9; }
@@ -74,14 +80,15 @@
     footer{ margin-top: 14px; padding: 0 4px; font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
   </style>
 </head>
-<body class="scanlines">
+<body>
+  <div class="scanlines-overlay" aria-hidden="true"></div>
   <div class="wrap">
-    <section class="panel card" id="top">
-      <div class="topbar">
+    <section class="ui-terminal-panel ui-terminal-card" id="top">
+      <div class="ui-terminal-topbar">
         <div>DJ-SHORTCUT.exe <span style="color:var(--acc2)">v1.0</span></div>
-        <div>STATUS: <span class="glow" style="color:var(--acc)">LIVE</span> • VIBE: UNDERGROUND</div>
+        <div>STATUS: <span class="ui-glow" style="color:var(--acc)">LIVE</span> • VIBE: UNDERGROUND</div>
       </div>
-      <h1 class="glow">DJ-Shortcut</h1>
+      <h1 class="glow">DJ-Shortcut <span class="cursor" aria-hidden="true">▮</span></h1>
       <p class="lead">Music for the mind. Electronic Dance Music and Other things I like. <span class="cursor">▮</span></p>
       <div class="boot" aria-label="Boot log">
         <div class="label">BOOT_LOG</div>
@@ -100,9 +107,9 @@
     </section>
 
     <div class="grid">
-      <section class="panel card" id="about">
+      <section class="panel card reveal" id="about">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> ABOUT</h2>
+          <h2 class="ui-glow"><span style="color:var(--acc)">&gt;</span> ABOUT</h2>
           <div class="path">/usr/profile</div>
         </div>
         <div class="section-body">
@@ -116,9 +123,9 @@
         </div>
       </section>
 
-      <section class="panel card" id="sets">
+      <section class="panel card reveal" id="sets">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> SETS</h2>
+          <h2 class="ui-glow"><span style="color:var(--acc)">&gt;</span> SETS</h2>
           <div class="path">/usr/sets</div>
         </div>
         <div class="section-body">
@@ -130,9 +137,9 @@
         </div>
       </section>
 
-      <section class="panel card" id="gigs">
+      <section class="panel card reveal" id="gigs">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> GIGS</h2>
+          <h2 class="ui-glow"><span style="color:var(--acc)">&gt;</span> GIGS</h2>
           <div class="path">/usr/gigs</div>
         </div>
         <div class="section-body">
@@ -142,9 +149,9 @@
         </div>
       </section>
 
-      <section class="panel card" id="contact">
+      <section class="panel card reveal" id="contact">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> CONTACT</h2>
+          <h2 class="ui-glow"><span style="color:var(--acc)">&gt;</span> CONTACT</h2>
           <div class="path">/usr/contact</div>
         </div>
         <div class="section-body">
@@ -159,9 +166,9 @@
         </div>
       </section>
 
-      <section class="panel card" id="easter-eggs">
+      <section class="panel card reveal" id="easter-eggs">
         <div class="section-head">
-          <h2 class="glow"><span style="color:var(--acc)">&gt;</span> EASTER EGGS</h2>
+          <h2 class="ui-glow"><span style="color:var(--acc)">&gt;</span> EASTER EGGS</h2>
           <div class="path">/usr/easter-eggs</div>
         </div>
         <div class="section-body">
@@ -183,8 +190,10 @@
     const bootLines = [
       "[SYS] INITIALIZING DJ-SHORTCUT PROFILE...",
       "[OK]  LOADING GENRES -> deep house, melodic techno, indie dance...",
+      "[OK]  CALIBRATING VIBE ENGINE -> analog warmth + clean lows",
       "[OK]  SYNCING RANGE -> 123–145 bpm",
       "[OK]  ROUTING OUTPUT -> MINDSPACE",
+      "[OK]  LINKING DIMENSIONAL CHANNEL -> HIGHER DIMENSIONS",
       "[OK]  READY"
     ];
     const bootList = document.getElementById("bootList");
@@ -192,15 +201,34 @@
     year.textContent = new Date().getFullYear();
 
     let i = 0;
+    const bootDelayMin = 150;
+    const bootDelayMax = 220;
+
+    function nextBootDelay() {
+      return Math.floor(Math.random() * (bootDelayMax - bootDelayMin + 1)) + bootDelayMin;
+    }
+
     function addLine() {
       if (i >= bootLines.length) return;
       const li = document.createElement("li");
       li.innerHTML = "<span>›</span>" + bootLines[i];
       bootList.appendChild(li);
       i++;
-      setTimeout(addLine, 180);
+      setTimeout(addLine, nextBootDelay());
     }
     addLine();
+
+    const revealSections = document.querySelectorAll(".reveal");
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -5% 0px" });
+
+    revealSections.forEach((section) => revealObserver.observe(section));
   </script>
 </body>
 </html>
