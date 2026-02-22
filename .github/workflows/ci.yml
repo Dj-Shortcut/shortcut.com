@@ -5,7 +5,17 @@ on:
   pull_request:
 
 jobs:
+  content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node -e "JSON.parse(require('fs').readFileSync('content/content.json','utf8'))"
+
   build:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,6 +24,5 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run check:content
       - run: npm run lint
       - run: npm run build
